@@ -46,14 +46,13 @@ class AppController extends Action
 
         $pesquisarPor = isset($_GET['pesquisarPor']) ? $_GET['pesquisarPor'] : '';
 
-        print_r($pesquisarPor);
-
         $usuarios = array();
 
         if($pesquisarPor != ""){
 
             $usuario = Container::getModel("Usuario");
             $usuario->__set("nome", $pesquisarPor);
+            $usuario->__set("id", $_SESSION['id']);
             $usuarios = $usuario->getAll();
         }
 
@@ -73,5 +72,34 @@ class AppController extends Action
         } else {
             return true;
         }
+    }
+
+    public function acao(){
+        $this->validaAutenticacao();
+
+        $acao = isset($_GET['acao']) ? $_GET['acao'] : "";
+        $id_usuario_seguindo = isset($_GET['id_usuario']) ? $_GET['id_usuario'] : "";
+
+        $usuario = Container::getModel("Usuario");
+        $usuario->__set("id", $_SESSION['id']);
+
+        if($acao == 'seguir'){
+            $usuario->seguirUsuario($id_usuario_seguindo);
+        }else if($acao == 'deixar_de_seguir'){
+            $usuario->deixarSeguirUsuario($id_usuario_seguindo);
+        }
+
+        header("Location: /quem_seguir");
+
+    }
+
+    public function removerTweet(){
+        $this->validaAutenticacao();
+
+        $tweet = Container::getModel("Tweet");
+        $tweet->__set("id", $_POST['id']);
+        $tweet->removerTweet();
+
+        header("Location: /timeline");
     }
 }

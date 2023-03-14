@@ -77,11 +77,14 @@
 					<p><?= $tweet['tweet'] ?></p>
 
 					<br />
-					<form>
+					<?php if($tweet['id_usuario'] == $_SESSION['id']){ ?>
+					<form action="/remover_tweet" method="POST">
+						<input type="hidden" id="idTweet" name="id" value="<?= $tweet['id'] ?>">
 						<div class="col d-flex justify-content-end">
 							<button type="submit" class="btn btn-danger"><small>Remover</small></button>
 						</div>
 					</form>
+					<?php } ?>
 				</div>
 			</div>
 
